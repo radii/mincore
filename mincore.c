@@ -30,7 +30,13 @@ static int o_fullname = 0;
 
 void usage(char *progname)
 {
-    die("Usage: %s [-flov] file1 [file2 ...]\n", progname);
+    fprintf(stderr, "Usage: %s [-eflov] file1 [file2 ...]\n", progname);
+    fprintf(stderr, "  -e: expand block lists ('1 2 3' versus '1-3')\n");
+    fprintf(stderr, "  -f: print full names (default: basename only)\n");
+    fprintf(stderr, "  -l: list pages\n");
+    fprintf(stderr, "  -o: one char per page\n");
+    fprintf(stderr, "  -v: verbose page listing\n");
+    exit(1);
 }
 
 static int pagesize;
