@@ -136,7 +136,7 @@ int count_present(unsigned char *vec, int n, int *runs)
 
 void basic_info(char *fname, unsigned char *vec, int npg)
 {
-    int nrun, npresent;
+    int nrun = 0, npresent;
 
     npresent = count_present(vec, npg, &nrun);
     printf("%s: %d/%d (%d%%) pages present (%d runs)\n",
