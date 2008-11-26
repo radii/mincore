@@ -139,8 +139,9 @@ void basic_info(char *fname, unsigned char *vec, int npg)
     int nrun = 0, npresent;
 
     npresent = count_present(vec, npg, &nrun);
-    printf("%s: %d/%d (%d%%) pages present (%d runs)\n",
-	    fname, npresent, npg, npg ? npresent * 100 / npg : 0, nrun);
+    printf("%s: %d/%d pages present (%d%%, %d run%s)\n",
+	    fname, npresent, npg, npg ? npresent * 100 / npg : 0, nrun,
+	    nrun == 1 ? "" : "s");
 }
 
 /* output bar showing presence of pages in file
