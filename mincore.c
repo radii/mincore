@@ -21,6 +21,7 @@ void die(char *fmt, ...)
 
 void basic_info(char *fname, unsigned char *vec, int npg);
 void summary_info(char *fname, unsigned char *vec, int npg);
+void list_info(char *fname, unsigned char *vec, int npg);
 void onedot_info(char *fname, unsigned char *vec, int npg);
 
 static void (*info_func)(char *fname, unsigned char *vec, int npg) = basic_info;
@@ -29,7 +30,7 @@ static int o_fullname = 0;
 
 void usage(char *progname)
 {
-    die("Usage: %s [-fvo] file1 [file2 ...]\n", progname);
+    die("Usage: %s [-flov] file1 [file2 ...]\n", progname);
 }
 
 static int pagesize;
@@ -101,10 +102,11 @@ int main(int argc, char **argv)
 
     pagesize = getpagesize();
 
-    while((c = getopt(argc, argv, "fhov")) != -1) {
+    while((c = getopt(argc, argv, "fhlov")) != -1) {
 	switch(c) {
 	    case 'f': o_fullname = 1; break;
 	    case 'h': usage(argv[0]);
+	    case 'l': info_func = list_info; break;
 	    case 'o': info_func = onedot_info; break;
 	    case 'v': info_func = summary_info; break;
 	    default:
@@ -202,5 +204,32 @@ void onedot_info(char *fname, unsigned char *vec, int npg)
     printf("%s: ", fname);
     for(i=0; i<npg; i++)
 	putchar(vec[i] ? 'x' : '.');
+    printf("\n");
+}
+
+void print_listitem(int start, int end)
+{
+    if(start < end)
+	printf(" %d-%d", start, end);
+    else
+	printf(" %d", start);
+}
+
+void list_info(char *fname, unsigned char *vec, int npg)
+{
+    int i;
+    int last = -1, start = -1;
+
+    printf("%s:", fname);
+    for(i=0; i<npg; i++) {
+	if(vec[i] != last) {
+	    if(last == 1)
+		print_listitem(start, i-1);
+	    last = vec[i];
+	    start = i;
+	}
+    }
+    if(last == 1)
+	print_listitem(start, i-1);
     printf("\n");
 }
