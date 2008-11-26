@@ -166,7 +166,7 @@ void summary_info(char *fname, unsigned char *vec, int npg)
     int extrawidth = 0;
 
     if(width > npg) {
-	extrawidth = width - npg;
+	extrawidth = width - npg + 1;
 	width = npg;
     }
     putchar('|');
