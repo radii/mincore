@@ -97,7 +97,7 @@ out:
 
 int main(int argc, char **argv)
 {
-    int c;
+    int c, i;
 
     pagesize = getpagesize();
 
@@ -112,8 +112,8 @@ int main(int argc, char **argv)
 	}
     }
 
-    for(; optind < argc; optind++) {
-	mincore_one(argv[optind]);
+    for(i=optind; i<argc; i++) {
+	mincore_one(argv[i]);
     }
     return 0;
 }
