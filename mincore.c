@@ -21,13 +21,15 @@ void die(char *fmt, ...)
 
 void basic_info(char *fname, unsigned char *vec, int npg);
 void summary_info(char *fname, unsigned char *vec, int npg);
+void onedot_info(char *fname, unsigned char *vec, int npg);
 
-static int o_verbose = 0;
+static void (*info_func)(char *fname, unsigned char *vec, int npg) = basic_info;
+
 static int o_fullname = 0;
 
 void usage(char *progname)
 {
-    die("Usage: %s [-f] [-v] file1 [file2 ...]\n", progname);
+    die("Usage: %s [-fvo] file1 [file2 ...]\n", progname);
 }
 
 static int pagesize;
@@ -79,10 +81,7 @@ int mincore_one(char *filename)
 	outname = strrchr(filename, '/');
 	outname = outname ? outname + 1 : filename;
     }
-    if(o_verbose)
-	summary_info(outname, vec, npg);
-    else
-	basic_info(outname, vec, npg);
+    info_func(outname, vec, npg);
 
 out_munmap:
     if(map && munmap(map, st.st_size) == -1)
@@ -102,11 +101,12 @@ int main(int argc, char **argv)
 
     pagesize = getpagesize();
 
-    while((c = getopt(argc, argv, "fhv")) != -1) {
+    while((c = getopt(argc, argv, "fhov")) != -1) {
 	switch(c) {
 	    case 'f': o_fullname = 1; break;
 	    case 'h': usage(argv[0]);
-	    case 'v': o_verbose = 1; break;
+	    case 'o': info_func = onedot_info; break;
+	    case 'v': info_func = summary_info; break;
 	    default:
 	        die("%s: unknown option '%c'\n", argv[0], c);
 	}
@@ -192,4 +192,14 @@ void summary_info(char *fname, unsigned char *vec, int npg)
 	putchar(out[x]);
     }
     printf("|%*s%s\n", extrawidth, fname ? " " : "", fname);
+}
+
+void onedot_info(char *fname, unsigned char *vec, int npg)
+{
+    int i;
+
+    printf("%s: ", fname);
+    for(i=0; i<npg; i++)
+	putchar(vec[i] ? 'x' : '.');
+    printf("\n");
 }
