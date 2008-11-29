@@ -27,13 +27,15 @@ void onedot_info(char *fname, unsigned char *vec, int npg);
 static void (*info_func)(char *fname, unsigned char *vec, int npg) = basic_info;
 
 static int o_fullname = 0;
+static int o_machinereadable = 0;
 
 void usage(char *progname)
 {
-    fprintf(stderr, "Usage: %s [-eflov] file1 [file2 ...]\n", progname);
+    fprintf(stderr, "Usage: %s [-eflmov] file1 [file2 ...]\n", progname);
     fprintf(stderr, "  -e: expand block lists ('1 2 3' versus '1-3')\n");
     fprintf(stderr, "  -f: print full names (default: basename only)\n");
     fprintf(stderr, "  -l: list pages\n");
+    fprintf(stderr, "  -m: do not print colons\n");
     fprintf(stderr, "  -o: one char per page\n");
     fprintf(stderr, "  -v: verbose page listing\n");
     exit(1);
@@ -108,11 +110,12 @@ int main(int argc, char **argv)
 
     pagesize = getpagesize();
 
-    while((c = getopt(argc, argv, "fhlov")) != -1) {
+    while((c = getopt(argc, argv, "fhlmov")) != -1) {
 	switch(c) {
 	    case 'f': o_fullname = 1; break;
 	    case 'h': usage(argv[0]);
 	    case 'l': info_func = list_info; break;
+	    case 'm': o_machinereadable = 1; break;
 	    case 'o': info_func = onedot_info; break;
 	    case 'v': info_func = summary_info; break;
 	    default:
@@ -226,7 +229,7 @@ void list_info(char *fname, unsigned char *vec, int npg)
     int i;
     int last = -1, start = -1;
 
-    printf("%s:", fname);
+    printf("%s%s", fname, o_machinereadable ? "" : ":");
     for(i=0; i<npg; i++) {
 	if(vec[i] != last) {
 	    if(last == 1)
