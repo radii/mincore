@@ -40,7 +40,9 @@ u64 rtc(void)
 
 void usage (char *progname)
 {
-    fprintf(stderr, "Usage: %s -[amrt] file b1 [b2 ...]\n", progname);
+    fprintf(stderr, "Usage: %s -[afmprst] file b1 [b2 ...]\n", progname);
+    fprintf(stderr, "%s: opportunistically page-in file blocks\n", progname);
+    fprintf(stderr, "  -a: set O_NOATIME (must be file owner or root)\n");
     fprintf(stderr, "  -f: use posix_fadvise(2) (default)\n");
     fprintf(stderr, "  -m: use madvise(2)\n");
     fprintf(stderr, "  -p: use mmap(2) + pagefault\n");
@@ -56,7 +58,7 @@ int account_pagein(u64, u64);
 int account_open(u64, u64);
 
 int pgsz;
-int o_time = 0;
+int o_time = 0, o_noatime = 0;
 
 int main(int argc, char **argv)
 {
@@ -66,8 +68,10 @@ int main(int argc, char **argv)
 
     pgsz = getpagesize();
 
-    while ((c = getopt(argc, argv, "fmprst")) != EOF) {
+    while ((c = getopt(argc, argv, "afmprst")) != EOF) {
 	switch(c) {
+	    case 'a':
+		o_noatime = 1; break;
 	    case 'f':
 		pagein = pagein_fadvise;
 		break;
@@ -121,12 +125,13 @@ int getfd(const char *fname)
     static int prevfd = -1;
     int fd;
     u64 t1;
+    int onoatime = o_noatime ? O_NOATIME : 0;
 
     if(!strcmp(fname, prevfname))
 	return prevfd;
 
     if(o_time) t1 = rtc();
-    if((fd = open(fname, O_RDONLY|O_NOATIME)) == -1)
+    if((fd = open(fname, O_RDONLY|onoatime)) == -1)
 	die("%s: %s\n", fname, strerror(errno));
     if(o_time) account_open(t1, rtc());
 
