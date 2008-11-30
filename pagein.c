@@ -96,7 +96,6 @@ int main(int argc, char **argv)
 	parse_intrange(argv[i], &a, &b);
 
 	for(blkno = a; blkno <= b; blkno++) {
-
 	    pagein(fname, blkno);
 	}
     }
