@@ -1,3 +1,11 @@
+/*
+ * mincore - an interface to mincore(2)
+ *
+ * Copyright (C) 2012 Andrew Isaacson <adi@hexapodia.org>
+ *
+ * This program is free software, licensed under the terms of the GNU GPL
+ * version 2.  Please see the file COPYING for more information.
+ */
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
