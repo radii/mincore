@@ -1,3 +1,11 @@
+/*
+ * pagein - ask for file pages to be read in from storage.
+ *
+ * Copyright (C) 2012 Andrew Isaacson <adi@hexapodia.org>
+ *
+ * This program is free software, licensed under the terms of the GNU GPL
+ * version 2.  Please see the file COPYING for more information.
+ */
 #define _GNU_SOURCE 1 /* for O_NOATIME */
 #include <stdio.h>
 #include <stdlib.h>
