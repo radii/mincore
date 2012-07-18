@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
     pgsz = getpagesize();
 
-    while ((c = getopt(argc, argv, "afmprst")) != EOF) {
+    while ((c = getopt(argc, argv, "afi:mprst")) != EOF) {
 	switch(c) {
 	    case 'a':
 		o_noatime = 1; break;
