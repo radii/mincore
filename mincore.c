@@ -39,14 +39,14 @@ static int o_machinereadable = 0;
 
 void usage(char *progname)
 {
-    fprintf(stderr, "Usage: %s [-eflmov] file1 [file2 ...]\n", progname);
-    fprintf(stderr, "  -e: expand block lists ('1 2 3' versus '1-3')\n");
-    fprintf(stderr, "  -f: print full names (default: basename only)\n");
-    fprintf(stderr, "  -l: list pages\n");
-    fprintf(stderr, "  -m: do not print colons\n");
-    fprintf(stderr, "  -o: one char per page\n");
-    fprintf(stderr, "  -v: verbose page listing\n");
-    exit(1);
+    die("Usage: %s [-eflmov] file1 [file2 ...]\n"
+        "  -e: expand block lists ('1 2 3' versus '1-3')\n"
+        "  -f: print full names (default: basename only)\n"
+        "  -l: list pages\n"
+        "  -m: do not print colons\n"
+        "  -o: one char per page\n"
+        "  -v: verbose page listing\n",
+        progname);
 }
 
 static int pagesize;

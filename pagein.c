@@ -48,17 +48,17 @@ u64 rtc(void)
 
 void usage (char *progname)
 {
-    fprintf(stderr, "Usage: %s -[afmprst] [-i infile | file b1 [b2 ...]]\n", progname);
-    fprintf(stderr, "%s: opportunistically page-in file blocks\n", progname);
-    fprintf(stderr, "  -a: set O_NOATIME (must be file owner or root)\n");
-    fprintf(stderr, "  -i: read input blocklist from infile (use '-' for stdin)\n");
-    fprintf(stderr, "  -f: use posix_fadvise(2) (default)\n");
-    fprintf(stderr, "  -m: use madvise(2)\n");
-    fprintf(stderr, "  -p: use mmap(2) + pagefault\n");
-    fprintf(stderr, "  -r: use read(2)\n");
-    fprintf(stderr, "  -s: compute success statistics using mincore(2)\n");
-    fprintf(stderr, "  -t: print timing information\n");
-    exit(1);
+    die("Usage: %s -[afmprst] [-i infile | file b1 [b2 ...]]\n"
+        "%s: opportunistically page-in file blocks\n"
+        "  -a: set O_NOATIME (must be file owner or root)\n"
+        "  -i: read input blocklist from infile (use '-' for stdin)\n"
+        "  -f: use posix_fadvise(2) (default)\n"
+        "  -m: use madvise(2)\n"
+        "  -p: use mmap(2) + pagefault\n"
+        "  -r: use read(2)\n"
+        "  -s: compute success statistics using mincore(2)\n"
+        "  -t: print timing information\n",
+        progname, progname);
 }
 
 int parse_intrange(const char *, off_t *, off_t *);
