@@ -8,7 +8,7 @@
 # join the resulting list of (file, page) into (file, p1, p2, p3, ...) lists
 
 find /proc/*/maps | xargs cat 2>/dev/null | \
-    awk '/[a-f0-9]*-[a-f0-9]* .*\// && !/ \(deleted\)$/ { print substr($0, 50) }' | \
+    awk '/[a-f0-9]*-[a-f0-9]* .*\// && !/ \(deleted\)$/ { print substr($0, 74) }' | \
     perl -ne 'print if($x{$_}++==0)' | xargs mincore -flm | awk 'NF>1{print}'|\
     sudo xargs -L1 `which blockno` | awk '{printf("%s %10d %s %s\n", $3, $4, $1, $2)}' | \
     sort | awk '{print $3, $4}' | \
