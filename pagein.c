@@ -40,9 +40,10 @@ u64 rtc(void)
 
 void usage (char *progname)
 {
-    fprintf(stderr, "Usage: %s -[afmprst] file b1 [b2 ...]\n", progname);
+    fprintf(stderr, "Usage: %s -[afmprst] [-i infile | file b1 [b2 ...]]\n", progname);
     fprintf(stderr, "%s: opportunistically page-in file blocks\n", progname);
     fprintf(stderr, "  -a: set O_NOATIME (must be file owner or root)\n");
+    fprintf(stderr, "  -i: read input blocklist from infile (use '-' for stdin)\n");
     fprintf(stderr, "  -f: use posix_fadvise(2) (default)\n");
     fprintf(stderr, "  -m: use madvise(2)\n");
     fprintf(stderr, "  -p: use mmap(2) + pagefault\n");
@@ -64,6 +65,7 @@ int main(int argc, char **argv)
 {
     int c, i;
     char *fname;
+    char *infile = NULL;
     int (*pagein)(const char *, off_t) = pagein_fadvise;
 
     pgsz = getpagesize();
@@ -75,6 +77,9 @@ int main(int argc, char **argv)
 	    case 'f':
 		pagein = pagein_fadvise;
 		break;
+            case 'i':
+                infile = optarg;
+                break;
 	    case 't':
 		o_time = 1;
 		/* XXX not done yet, fall through */
@@ -87,17 +92,20 @@ int main(int argc, char **argv)
 	}
     }
 
-    if (argc < optind + 2) usage(argv[0]);
+    if (infile) {
+    } else {
+        if (argc < optind + 2) usage(argv[0]);
 
-    fname = argv[optind++];
+        fname = argv[optind++];
 
-    for (i = optind; i < argc; i++) {
-	off_t blkno, a, b;
-	parse_intrange(argv[i], &a, &b);
+        for (i = optind; i < argc; i++) {
+            off_t blkno, a, b;
+            parse_intrange(argv[i], &a, &b);
 
-	for(blkno = a; blkno <= b; blkno++) {
-	    pagein(fname, blkno);
-	}
+            for(blkno = a; blkno <= b; blkno++) {
+                pagein(fname, blkno);
+            }
+        }
     }
     return 0;
 }
